@@ -9,10 +9,9 @@ signed main(){
         for(int i=0;i<n;i++){
            cin >> vec[i];
         }
-        int pos=n-2;//pos is b
         bool flag=false;
         map<int,int> mp;
-        while(pos>0)
+        for(int pos=n-2;pos>0;pos--)
         {
             for(int i=0;i<pos;i++)
             { // looping over a a+b==c+d, loop over d, ci pos +1 always
@@ -22,16 +21,15 @@ signed main(){
                     flag=true;
                     break;
                 }
+            }
                 for(int j=pos+1;j<n;j++)
                 {
                     mp[vec[j]+vec[pos]]++;
                 }
-            }
-            pos--;
         }
         if(flag)
             cout << "YES"<<endl;
         else
             cout << "NO" << endl;
-    
+
 }

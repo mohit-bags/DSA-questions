@@ -1,18 +1,17 @@
 #include <bits/stdc++.h>
-#define int long long int
 using namespace std;
+
+#define int long long int
 #define IOS ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 int dist=0;
-int sum=0;
 void insert(int n)
 {
-    sum+=n;
     if(n%2)dist++;
 }
 void remove(int n){
-    sum-=n;
     if(n%2)dist--;
 }
+multiset<int> mt;
 signed main(){
     IOS;
     int t;
@@ -21,28 +20,42 @@ signed main(){
         int n,k,d;
         cin >> n >> k >> d;
         int arr[n];
+        int pre[n];
+        int head=-1; int tail=0; int ans=-1e18;
+        // cout << "2"<<endl;
         for(int i=0;i<n;i++){
             cin >> arr[i];
+            pre[i]=arr[i];
+            if(i)pre[i]+=pre[i-1];
         }
-        int head=-1,tail=0,ans=0;
-        bool impossible=true;
         while(tail<n){
-            while(head+1<n &&  sum+arr[head+1]<=d && (dist<k  || (dist==k && arr[head+1]%2==0))){
+            while(head+1<n && (dist<k ||(dist==k && arr[head+1]%2==0))){
                 head++;
                 insert(arr[head]);
-                impossible=false;
+                mt.insert(pre[head]);
             }
-            ans+=sum;
+            int xx = tail?pre[tail-1]:0;
+            auto it= mt.upper_bound(d+xx);
+            if(it!=mt.begin())
+            {
+                it--;
+                ans=max(ans,*it-xx);
+            }
             if(tail>head){
                 tail++;
                 head=tail-1;
             }
-            else{
+            else{   
                 remove(arr[tail]);
+                mt.erase(mt.find(pre[tail]));
                 tail++;
             }
         }
+        if(ans==-1e18)
+            cout<<"IMPOSSIBLE"<<endl;
+        else
         cout << ans << endl;
 
     }
+    return 0;
 }
